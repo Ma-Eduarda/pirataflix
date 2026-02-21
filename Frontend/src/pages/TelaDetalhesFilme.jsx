@@ -5,6 +5,8 @@ import { ArrowLeft, CheckCircleFill, TrashFill, PlusCircle, PlusCircleFill } fro
 import { buscarFilmePorId } from '../services/filme';
 import { listarFavoritos, listarAssistidos, adicionarFavorito, removerFavorito, marcarAssistido, removerAssistido } from '../services/usuario';
 import './TelaDetalhesFilme.css';
+import { MdPlaylistAdd, MdPlaylistAddCheck, MdCheckCircle } from "react-icons/md";
+
 
 const formatarData = (dataString) => {
     if (!dataString) return "N/A";
@@ -152,7 +154,7 @@ export default function TelaDetalhesFilme({ user }) {
                                 bg="success"
                                 className="movie-badge"
                             >
-                                <CheckCircleFill size={14} /> Assistido
+                                <MdCheckCircle size={20} /> Assistido
                             </Badge>
                         )}
 
@@ -161,7 +163,7 @@ export default function TelaDetalhesFilme({ user }) {
                                 bg="primary"
                                 className="movie-badge"
                             >
-                                <PlusCircleFill size={14} /> Na Lista
+                                <MdPlaylistAddCheck size={20} /> Na Lista
                             </Badge>
                         )}
                     </div>
@@ -247,7 +249,7 @@ export default function TelaDetalhesFilme({ user }) {
                                         onClick={handleAdicionar}
                                         className="d-flex align-items-center gap-2 add-button"
                                     >
-                                        <PlusCircle size={20} style={{ color: "red" }} />  Adicionar à Minha Lista
+                                        <MdPlaylistAdd size={25} style={{ color: "red" }} />  Adicionar à Minha Lista
                                     </Button>
                                 )}
                             </div>
