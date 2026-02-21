@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, Card, Button, Alert, Badge } from 'react-bootstrap';
 import { TrashFill, CheckCircleFill, PlusCircleFill, PlusLg} from 'react-bootstrap-icons';
+import { MdPlaylistAdd, MdPlaylistAddCheck, MdCheckCircle } from "react-icons/md";
 import '../pages/Home.css';
 
 const formatarData = (dataString) => {
@@ -57,7 +58,7 @@ const Catalogo = ({ movies, userMovies, assistidos, onAdicionar, onRemover, onRe
                                                 bg="success"
                                                 className="movie-badge"
                                             >
-                                                <CheckCircleFill size={14} /> Assistido
+                                                <MdCheckCircle size={17} /> Assistido
                                             </Badge>
                                         )}
 
@@ -65,8 +66,9 @@ const Catalogo = ({ movies, userMovies, assistidos, onAdicionar, onRemover, onRe
                                             <Badge
                                                 bg="primary"
                                                 className="movie-badge"
+
                                             >
-                                                <PlusCircleFill size={14} /> Na Lista
+                                                <MdPlaylistAddCheck size={18} /> Na Lista
                                             </Badge>
                                         )}
                                     </div>
@@ -100,9 +102,10 @@ const Catalogo = ({ movies, userMovies, assistidos, onAdicionar, onRemover, onRe
                                                 <Button
                                                     size="sm"
                                                     variant="primary"
+                                                    className='add-button'
                                                     onClick={(e) => { e.stopPropagation(); onAdicionar(movie); }}
                                                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                                                    <PlusLg size={16} style={{ color: "red" }} /> Adicionar à lista
+                                                    <MdPlaylistAdd  size={20} style={{ color: "red" }} /> Adicionar à lista
                                                 </Button>
                                             )}
                                         </div>
