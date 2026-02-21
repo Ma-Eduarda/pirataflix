@@ -1,0 +1,182 @@
+.detalhes-filme-container {
+    color: #fff;
+    max-width: 1200px;
+}
+
+.detalhes-content {
+    margin-top: 2rem;
+}
+
+.poster-container {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.poster-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+}
+
+.status-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.filme-info {
+    padding: 0 1rem;
+}
+
+.filme-titulo {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.filme-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    color: #b3b3b3;
+    font-size: 1rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filme-detalhes {
+    border-top: 1px solid #333;
+    padding-top: 1.5rem;
+}
+
+.detalhe-item {
+    margin-bottom: 1.5rem;
+}
+
+.detalhe-item strong {
+    display: block;
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.detalhe-item p {
+    color: #b3b3b3;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+    word-break: break-word;
+}
+
+.generos-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.generos-container .badge {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+    color: #ffffff;
+    background-color: #ad0404 !important;
+}
+
+.acoes-container {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #333;
+}
+
+.acoes-container button {
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    border-radius: 50px; 
+}
+
+.acoes-container button svg {
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.acoes-container button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.add-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.add-button {
+    font-weight: 500;
+    background-color: #313131 !important;
+    border: none ! important;
+    color: #fff !important;
+    box-shadow: none !important;
+    outline: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+}
+
+.add-button svg {
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.add-button:hover {
+    background-color: #141414 !important;
+}
+
+.catalogo-title {
+    margin-left: 0; 
+    margin-bottom: 16px;
+    font-weight: 700;
+}
+
+.add-button:focus,
+.add-button:focus-visible,
+.add-button:active {
+    background-color: #313131 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+
+@media (max-width: 768px) {
+    .filme-titulo {
+        font-size: 1.8rem;
+    }
+
+    .filme-info {
+        padding: 0;
+    }
+
+    .acoes-container {
+        flex-direction: column;
+    }
+
+    .acoes-container button {
+        width: 100%;
+    }
+}

@@ -1,0 +1,314 @@
+import React, { useState, useEffect} from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Modal, Button, Form, Container, Spinner, Alert, Card, Row, Col } from 'react-bootstrap';
+import { listarFilmes, criarFilme, atualizarFilme, deletarFilme } from "../services/filme";
+import { TrashFill, PencilSquare, PlusCircle } from 'react-bootstrap-icons';  
+import "./TelaAdm.css";
+
+function TelaADM() {
+
+  const [showModal, setShowModal] = useState(false);
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [editarFilme, setEditarFilme] = useState(null);
+  const [titulo, setTitulo] = useState('');
+  const [dt_lancamento, setDt_lancamento] = useState('');
+  const [generos, setGeneros] = useState([]);
+  const [diretor, setDiretor] = useState('');
+  const [sinopse, setSinopse] = useState('');
+  const [capa_filme, setCapa_filme] = useState('');
+
+  const limparFormulario = () => {
+    setEditarFilme(null);
+    setTitulo('');
+    setDiretor('');
+    setSinopse('');
+    setGeneros([]);
+    setDt_lancamento('');
+    setCapa_filme('');
+  };
+
+  const opcoesGeneros = ["Ação", "Comédia", "Drama", "Fantasia", "Terror", "Romance", "Animação", "Aventura", "Suspense",
+                          "Família", "Infantil", "Ficção Científica", "Guerra"];
+
+  const anoAtual = new Date().getFullYear();
+  const dataMin = "1895-01-01";
+  const dataMax = `${anoAtual + 5}-12-31`;
+
+  const formatarData = (dataString) => {
+    if (!dataString) return "N/A";
+
+    return new Date(dataString).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+  };
+
+  const handleShowAdicionar = () => {
+    setEditarFilme(null);
+    setTitulo('');
+    setDiretor('');
+    setSinopse('');
+    setDt_lancamento('');
+    setGeneros([]);
+    setCapa_filme('');
+    setShowModal(true);
+  };
+
+  const handleEditar = (movie) => {
+    setEditarFilme(movie);
+    setTitulo(movie.titulo || '');
+    setDiretor(movie.diretor || '');
+    setSinopse(movie.sinopse || '');
+    setGeneros(movie.generos || []);
+    setDt_lancamento(movie.dt_lancamento || '');
+    setCapa_filme(movie.capa_filme || '');
+    setShowModal(true);
+
+  };
+
+  const handleDelete = async (movie) => {
+    if (!window.confirm(`Deseja realmente excluir o filme "${movie.titulo}"?`)) return;
+
+    try {
+      await deletarFilme(movie.id);
+      setMovies(prev => prev.filter(m => m.id !== movie.id));
+    } catch (err) {
+      alert("Erro ao deletar filme");
+    }
+  }
+
+  const handleGeneroChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setGeneros(prev => [...prev, value]);
+    } else {
+      setGeneros(prev => prev.filter(g => g !== value));
+    }
+  };
+
+  const handleSave = async () => {
+    if (titulo.trim().length < 3) {
+      return;
+    }
+
+    const filme = {
+      titulo,
+      diretor,
+      dt_lancamento,
+      sinopse,
+      capa_filme,
+      generos
+    };
+
+    try {
+      let filmeSalvo;
+
+      if (editarFilme) {
+        filmeSalvo = await atualizarFilme(editarFilme.id, filme);
+        //setMovies(prev => prev.map(m => (m.id === filmeSalvo.id ? filmeSalvo : m)))
+
+        const filmesAtualizados = await listarFilmes();
+        setMovies(filmesAtualizados);
+      } else {
+        filmeSalvo = await criarFilme(filme);
+        setMovies(prev => [...prev, filmeSalvo]);
+      }
+
+      setShowModal(false);
+      limparFormulario();
+    } catch (err) {
+      alert("Erro ao salvar filme");
+    }
+  };
+
+  useEffect(() => {
+    const carregarFilmes = async () => {
+      try {
+        const data = await listarFilmes();
+        setMovies(data);
+      } catch (err) {
+        setError("Erro ao carregar filmes");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    carregarFilmes();
+  }, []);
+
+  useEffect(() => {
+    if (location.state?.editarFilme) {
+      const movie = location.state.editarFilme;
+      handleEditar(movie);
+      // Limpar o state após usar
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location]);
+
+  if (loading) {
+    return (
+      <Container className="d-flex justify-content-center align-items-center vh-100">
+        <Spinner animation="border" />
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container className="d-flex justify-content-center align-items-center vh-100">
+        <Alert variant="danger">{error}</Alert>
+      </Container>
+    );
+  }
+
+  const truncateText = (text, maxLength) => {
+    if (!text) return "Sem sinopse";
+    return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+  };
+
+  return (
+    <Container className="home" style={{ fontFamily: 'Inter, sans-serif' }}>
+      <br />
+      <div className="admin-header mb-4 mt-5">
+        <div>
+          <h2 className="admin-title">Administração de Filmes</h2>
+          <p className="admin-subtitle">
+            Gerencie o catálogo, adicione, edite ou remova filmes da plataforma
+          </p>
+        </div>
+
+        <div className="admin-badge">
+          <Button
+          variant="success"
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', borderRadius: '50px', fontWeight: '600' }}
+          onClick={handleShowAdicionar}
+        >
+          <PlusCircle size={20} style={{ marginRight: "2px" }} /> Adicionar Filme
+        </Button>
+        </div>
+      </div>
+
+      <br />
+      <hr />
+
+      <div className="d-flex justify-content-between align-items-center mb-4 mt-5 lista-header">
+        <h2 className=" titulo-lista">
+          <span className="barra-titulo"></span>
+          Catálogo <span className="text-secondary">({movies.length})</span>
+        </h2>
+      </div>
+      {/* Lista de filmes */}
+      <Row className="g-3">
+        {movies.map(movie => (
+          <Col key={movie.id} md={2} sm={4} xs={6}>
+            <Card className="movie-card" onClick={() => navigate(`/filme/${movie.id}`)} style={{ cursor: 'pointer' }}>
+              <div className="movie-cover">
+                <img src={movie.capa_filme} alt={movie.titulo} />
+              </div>
+
+              <div className="movie-info">
+                <h6 onClick={() => navigate(`/filme/${movie.id}`)} >{movie.titulo}</h6>
+
+                <p><strong>Diretor:</strong> {movie.diretor || "N/A"}</p>
+
+                <p><strong>Sinopse:</strong> {truncateText(movie.sinopse, 20) || "N/A"}</p>
+
+                <p><strong>Gênero:</strong> {(movie.generos || []).join(", ")}</p>
+
+                <small>Lançamento: {formatarData(movie.dt_lancamento) || "N/A"}</small>
+
+                <Button variant="success" onClick={(e) => { e.stopPropagation(); handleEditar(movie); }}>
+                  <PencilSquare size={14} style={{ marginRight: "2px" }} /> Editar
+                </Button>
+                <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDelete(movie); }}>
+                  <TrashFill size={14} style={{ marginRight: "2px" }} /> Excluir
+                </Button>
+
+              </div>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+      {/* Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>{editarFilme ? 'Editar Filme' : 'Adicionar Filme'}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Título do Filme <span className="text-danger">*</span> </Form.Label>
+              <Form.Control
+                type="text"
+                value={titulo}
+                onChange={e => setTitulo(e.target.value)}
+                autoFocus
+                isInvalid={titulo.trim().length < 2 && titulo.length > 0}
+              />
+              <Form.Control.Feedback type="invalid">
+                O título deve ter pelo menos 2 caracteres.
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Data de lançamento</Form.Label>
+              <Form.Control
+                type="date"
+                value={dt_lancamento}
+                onChange={e => setDt_lancamento(e.target.value)}
+                min={dataMin}
+                max={dataMax}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Diretor</Form.Label>
+              <Form.Control type="text" rows={3} value={diretor} onChange={e => setDiretor(e.target.value)} />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Sinopse</Form.Label>
+              <Form.Control as="textarea" rows={3} value={sinopse} onChange={e => setSinopse(e.target.value)} />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>URL da Imagem</Form.Label>
+              <Form.Control type="text" value={capa_filme} onChange={e => setCapa_filme(e.target.value)} />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Gêneros</Form.Label>
+              <div>
+                {opcoesGeneros.map(g => (
+                  <Form.Check
+                    inline
+                    key={g}
+                    type="checkbox"
+                    label={g}
+                    value={g}
+                    checked={generos.includes(g)}
+                    onChange={handleGeneroChange}
+                  />
+                ))}
+              </div>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>Fechar</Button>
+          <Button variant="success" disabled={titulo.trim().length < 3} onClick={handleSave}>
+            {editarFilme ? 'Salvar Alterações' : 'Adicionar Filme'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </Container>
+  );
+}
+
+export default TelaADM;

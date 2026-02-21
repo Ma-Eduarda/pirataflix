@@ -1,0 +1,31 @@
+.lista-section {
+    margin-bottom: 50px;
+}
+
+/* SCROLL HORIZONTAL */
+.scroll-horizontal-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 15px;
+}
+
+/* HOVER */
+.scroll-horizontal-container .movie-card:hover {
+    transform: scale(1.05);
+    z-index: 20;
+}
+
+/* SCROLLBAR */
+.scroll-horizontal-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.scroll-horizontal-container::-webkit-scrollbar-thumb {
+    background: #3b0407;
+    border-radius: 10px;
+}
+
+.scroll-horizontal-container {
+    scrollbar-width: thin;
+    scrollbar-color: #3b0407 #1a1a1a;
+}
