@@ -15,17 +15,18 @@
     z-index: 20;
 }
 
+
 /* SCROLLBAR */
 .scroll-horizontal-container::-webkit-scrollbar {
     height: 8px;
 }
 
 .scroll-horizontal-container::-webkit-scrollbar-thumb {
-    background: #3b0407;
+    scrollbar-color: #8d2005 #640c0c;
     border-radius: 10px;
 }
 
 .scroll-horizontal-container {
     scrollbar-width: thin;
-    scrollbar-color: #3b0407 #1a1a1a;
+    scrollbar-color: #531202 #1a1a1a;
 }
