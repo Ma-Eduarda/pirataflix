@@ -206,7 +206,7 @@ export default function Home({ user }) {
 
                       <p><strong>Diretor:</strong> {movie.diretor || "N/A"}</p>
 
-                      <p><strong>Roteiro:</strong> {movie.roteiro || "N/A"}</p>
+                      <p><strong>Sinopse:</strong> {movie.sinopse || "N/A"}</p>
 
                       <p><strong>Gênero:</strong> {(movie.generos || []).join(", ")}</p>
 
