@@ -9,6 +9,22 @@ def init_database():
 
     cur.execute(sql_script)
 
+    cur.execute("ALTER TABLE filme ADD COLUMN IF NOT EXISTS sinopse TEXT")
+    cur.execute("""
+        DO $$
+        BEGIN
+            IF EXISTS (
+                SELECT 1
+                FROM information_schema.columns
+                WHERE table_schema = current_schema()
+                  AND table_name = 'filme'
+                  AND column_name = 'roteiro'
+            ) THEN
+                EXECUTE 'UPDATE filme SET sinopse = COALESCE(sinopse, roteiro)';
+            END IF;
+        END $$;
+    """)
+
     conn.commit()
     cur.close()
     conn.close()

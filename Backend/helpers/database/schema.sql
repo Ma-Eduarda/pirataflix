@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS filme (
     titulo VARCHAR(255) NOT NULL,
     diretor VARCHAR(255),
     dt_lancamento DATE,
-    roteiro TEXT,
+    sinopse TEXT,
     capa_filme TEXT
 );
 
